@@ -24,7 +24,7 @@ A fast, simple, and lightweight URL shortening service built with Go. This API a
 Before you begin, ensure you have the following installed:
 
 - [Go](https://golang.org/doc/install) (version 1.25.3 or higher)
-- [MongoDB](https://www.mongodb.com/try/download/community) (local installation or MongoDB Atlas account)
+- [MongoDB Atlas](https://www.mongodb.com/atlas) account (free tier is sufficient) OR local MongoDB installation
 
 ## 🔧 Installation
 
@@ -51,15 +51,7 @@ Before you begin, ensure you have the following installed:
    PORT=8080
    ```
 
-   Example for local MongoDB:
-
-   ```env
-   MONGO_URI=mongodb://localhost:27017
-   BASE_URL=http://localhost:8080
-   PORT=8080
-   ```
-
-   For MongoDB Atlas:
+   **Recommended: MongoDB Atlas (free tier)**
 
    ```env
    MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/?retryWrites=true&w=majority
@@ -67,23 +59,25 @@ Before you begin, ensure you have the following installed:
    PORT=8080
    ```
 
-## 🚦 Running the Application
+   **Alternative: Local MongoDB**
 
-1. **Start your MongoDB instance** (if running locally):
-
-   ```bash
-   mongod
+   ```env
+   MONGO_URI=mongodb://localhost:27017
+   BASE_URL=http://localhost:8080
+   PORT=8080
    ```
 
-   Or use MongoDB Atlas if you prefer cloud hosting.
+## 🚦 Running the Application
 
-2. **Run the application:**
+1. **Run the application:**
 
    ```bash
    go run main.go
    ```
 
    The server will start on the port specified in your `.env` file (default: 8080).
+
+   > **Note:** If you're using a local MongoDB installation, make sure MongoDB is running with `mongod` before starting the application.
 
 ## 📡 API Documentation
 
