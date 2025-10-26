@@ -2,24 +2,25 @@ package main
 
 import (
 	"context"
-	"log"
 	"os"
 
 	"github.com/Danztee/url-shortener/config"
 	"github.com/Danztee/url-shortener/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		logrus.WithField("error", err.Error()).Fatal("Error loading .env file")
 	}
+
 	client := config.ConnectDB()
 	defer func() {
 		if err := client.Disconnect(context.TODO()); err != nil {
-			log.Fatal(err)
+			logrus.WithField("error", err.Error()).Error("Error disconnecting from database")
 		}
 	}()
 
@@ -29,5 +30,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 
-	server.Run(":" + port)
+	if err := server.Run(":" + port); err != nil {
+		logrus.WithField("error", err.Error()).Fatal("Failed to start server")
+	}
 }

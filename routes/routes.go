@@ -7,7 +7,6 @@ import (
 )
 
 func RegisterRoutes(server *gin.Engine, client *mongo.Client) {
-	server.POST("/shorten", func(c *gin.Context) {
-		controllers.ShortenUrl(c, client)
-	})
+	server.POST("/shorten", controllers.ShortenUrl(client))
+	server.GET(":code", controllers.RedirectUrl(client))
 }

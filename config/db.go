@@ -2,8 +2,6 @@ package config
 
 import (
 	"context"
-	"fmt"
-	"log"
 	"os"
 
 	"github.com/sirupsen/logrus"
@@ -14,23 +12,23 @@ import (
 func ConnectDB() *mongo.Client {
 	uri := os.Getenv("MONGO_URI")
 
-	fmt.Println(uri, "uri")
-
 	if uri == "" {
-		log.Fatal("Set your mongodb uri")
+		logrus.Fatal("MONGO_URI environment variable is not set")
 	}
 
 	client, err := mongo.Connect(options.Client(), options.Client().ApplyURI(uri))
 	if err != nil {
+		logrus.WithField("error", err.Error()).Fatal("Failed to connect to MongoDB")
 		panic(err)
 	}
 
 	err = client.Ping(context.TODO(), nil)
 	if err != nil {
+		logrus.WithField("error", err.Error()).Fatal("Failed to ping MongoDB")
 		panic(err)
 	}
 
-	logrus.WithFields(logrus.Fields{}).Info("Database connected")
+	logrus.Info("Successfully connected to MongoDB")
 
 	return client
 }
