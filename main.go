@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 
@@ -15,11 +16,18 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	config.ConnectDB()
+	client := config.ConnectDB()
+	defer func() {
+		if err := client.Disconnect(context.TODO()); err != nil {
+			log.Fatal(err)
+		}
+	}()
 
 	server := gin.Default()
 
-	routes.RegisterRoutes(server)
+	routes.RegisterRoutes(server, client)
 
-	server.Run(os.Getenv("PORT"))
+	port := os.Getenv("PORT")
+
+	server.Run(":" + port)
 }

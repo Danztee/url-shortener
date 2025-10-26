@@ -11,7 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
-func ConnectDB() {
+func ConnectDB() *mongo.Client {
 	uri := os.Getenv("MONGO_URI")
 
 	fmt.Println(uri, "uri")
@@ -25,11 +25,12 @@ func ConnectDB() {
 		panic(err)
 	}
 
+	err = client.Ping(context.TODO(), nil)
+	if err != nil {
+		panic(err)
+	}
+
 	logrus.WithFields(logrus.Fields{}).Info("Database connected")
 
-	defer func() {
-		if err := client.Disconnect(context.TODO()); err != nil {
-			panic(err)
-		}
-	}()
+	return client
 }
